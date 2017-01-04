@@ -1,0 +1,13 @@
+# roles.txt
+- src: mm0.touch
+- src: mm0.group
+- src: mm0.ntp
+- src: mm0.vimrc
+- src: mm0.sudo 
+- src: mm0.bash
+- src: mm0.baseline
+- src: mm0.php-composer
+- src: mm0.awscli
+- src: mm0.php-xdebug
+  version: master
+- src: mm0.php-code-sniffer

@@ -4,12 +4,12 @@
     "type": "library",
     "autoload": {
         "psr-0": {
-            "mm0\\ImageManager\\": "src/"
+            "mm0\\ImageManager": "src"
         }
     },
     "require": {
         "monolog/monolog": "^1.20",
-        "aws/aws-sdk-php": "^3.20"
+        "aws/aws-sdk-php": "2.*"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7"

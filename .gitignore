@@ -104,3 +104,4 @@ DerivedData/
 
 # Java class files
 *.class
+ansible/roles/*

@@ -1,0 +1,37 @@
+<phpunit
+        colors="true"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        stopOnFailure="true"
+        stopOnError="true"
+        verbose="true"
+        backupGlobals="false"
+        backupStaticAttributes="false"
+        bootstrap="tests/bootstrap.php">
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">src/</directory>
+        </whitelist>
+        <blacklist>
+                <directory>src/mm0/ImageManager/Exceptions/</directory>
+                <directory>tests</directory>
+                <directory>vendor</directory>
+                <directory>ansible</directory>
+                <directory>Examples</directory>
+          </blacklist>
+    </filter>
+    <testsuites>
+        <testsuite name="Configurations">
+            <directory suffix=".php">./tests/Configurations</directory>
+        </testsuite>
+        <testsuite name="Connections">
+            <directory suffix=".php">./tests/Connections</directory>
+        </testsuite>
+        <testsuite name="FullTestSuites">
+            <directory suffix=".php">./tests/FullTestSuites</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
+

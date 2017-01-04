@@ -1,0 +1,46 @@
+# 
+# example:  
+#
+#   ansible-playbook provision_server.yml --extra-vars "target=vagrant server_hostname=HomeSite"
+#
+---
+- hosts: "{{ target }}"
+  gather_facts: true
+  become: yes
+  user: ubuntu
+  vars:
+  - extra_packages_to_install:
+    - build-essential
+    - aptitude
+    - php5
+    - php5-dev
+    - php5-curl
+    - libssh2-php
+  - the_group: ubuntu
+  roles:
+  - { role: mm0.baseline, target: "{{ target }}", extra_packages: "{{ extra_packages_to_install }}" }
+  # create 'devs' group 
+  - { role: mm0.group,
+      the_groups: [ 
+        { name: "devs", state: "present"},
+        { name: "{{ the_group }}", state: "present"}
+      ]
+    }  
+  - mm0.sudo
+  - mm0.bash
+  - mm0.vimrc
+  # create env directory
+  - { role: mm0.touch,
+      owner: "{{ ansible_ssh_user }}",
+      group: "{{ ansible_ssh_user }}",
+      mode: "0644",
+      files: "/var/log/image-manager.log"
+  }
+  - { role: mm0.ntp }
+  - mm0.php-composer
+  - mm0.awscli
+    - { role: mm0.php-xdebug,
+      php_extension_conf_paths: ['/etc/php5/cli/conf.d/'],
+      php_enable_webserver: false
+    }
+  - mm0.php-code-sniffer

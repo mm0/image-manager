@@ -1,0 +1,2 @@
+[vagrant]
+3.3.3.11 ansible_ssh_user=vagrant ansible_connection=ssh
