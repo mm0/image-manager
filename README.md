@@ -154,7 +154,7 @@ To see full test coverage, run:
 
 ## License
 
-Copyright (c) 2016, Matt Margolin
+Copyright (c) 2017, Matt Margolin
 
 All rights reserved.
 

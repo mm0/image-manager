@@ -2,6 +2,8 @@
 
 namespace mm0\Imagemanager;
 
+use mm0\ImageManager\Log;
+
 /**
  * Class ConnectionResponse
  * @package mm0\ImageManager
@@ -58,8 +60,8 @@ class ConnectionResponse extends BaseClass
 
     public function showOutput()
     {
-        $this->logInfo($this->stdout());
-        $this->logError($this->stderr());
+        Log::logInfo($this->stdout());
+        Log::logError($this->stderr());
     }
 
     public function __toString()

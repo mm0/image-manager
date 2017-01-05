@@ -61,6 +61,7 @@ class Uploader implements SaveInterface
         $this->region = $region;
         $this->concurrency = $concurrency;
         $this->client = S3Client::factory([
+            "profile"=> "default",
             "region" => $this->region
         ]);
         $this->testSave();

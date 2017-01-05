@@ -9,7 +9,7 @@ interface ConnectionInterface
     /**
      * @return ConnectionResponse
      */
-    function executeCommand($command);
+    function executeCommand($command, $no_sudo = false);
 
     /**
      * @param string $file
@@ -32,7 +32,7 @@ interface ConnectionInterface
     function file_exists($file);
 
     /**
-     * @return resource
+     * @return ConnectionInterface
      */
     function getConnection();
 

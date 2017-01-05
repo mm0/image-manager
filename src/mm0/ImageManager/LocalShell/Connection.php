@@ -2,6 +2,7 @@
 
 namespace mm0\ImageManager\LocalShell;
 
+use mm0\ImageManager\AbstractConnection;
 use mm0\ImageManager\ConnectionResponse;
 use mm0\ImageManager\ConnectionInterface;
 use RecursiveIteratorIterator;
@@ -12,34 +13,8 @@ use mm0\ImageManager\Log;
  * Class Connection
  * @package mm0\ImageManager
  */
-class Connection implements ConnectionInterface
+class Connection extends AbstractConnection
 {
-
-    /**
-     * @var \Iterator::class
-     */
-    protected $iterator;
-
-    /**
-     * @var bool
-     */
-    protected $sudo_all = false;
-
-    /**
-     * @return boolean
-     */
-    public function isSudoAll()
-    {
-        return $this->sudo_all;
-    }
-
-    /**
-     * @param boolean $sudo_all
-     */
-    public function setSudoAll($sudo_all)
-    {
-        $this->sudo_all = $sudo_all;
-    }
 
     /**
      * Connection constructor.
@@ -50,14 +25,6 @@ class Connection implements ConnectionInterface
 
     public function verify()
     {
-    }
-
-    /**
-     * @return ConnectionInterface
-     */
-    public function getConnection($force_reconnect = false)
-    {
-        return $this;
     }
 
     /**
@@ -94,14 +61,6 @@ class Connection implements ConnectionInterface
         return $contents;
     }
 
-    public function getFileResource($file){
-        return \finfo_open(FILEINFO_MIME_TYPE);
-
-    }
-
-    public function closeFileResource($resource){
-        finfo_close($resource);
-    }
     /**
      * @return string
      */
@@ -125,8 +84,7 @@ class Connection implements ConnectionInterface
      * @param string $file
      * @return boolean
      */
-    public
-    function file_exists($file)
+    public function file_exists($file)
     {
         return file_exists($file);
     }
@@ -140,19 +98,7 @@ class Connection implements ConnectionInterface
         return scandir($directory);
     }
 
-    public function getIterator($path){
-        $type = $this->getIteratorType();
-        return new $type($path);
-    }
 
-    /**
-     * @param string $directory
-     * @return boolean
-     */
-    public function is_dir($directory)
-    {
-        return is_dir($directory);
-    }
     /**
      *
      * @param string $directory
@@ -203,20 +149,6 @@ class Connection implements ConnectionInterface
         return false;
     }
 
-    /**
-     * @return \Iterator
-     */
-    public function getIteratorType()
-    {
-        return $this->iterator;
-    }
 
-    /**
-     * @param \Iterator $iterator
-     */
-    public function setIteratorType($iterator)
-    {
-        $this->iterator = $iterator;
-    }
 
 }

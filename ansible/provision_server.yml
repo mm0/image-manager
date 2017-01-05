@@ -39,8 +39,8 @@
   - { role: mm0.ntp }
   - mm0.php-composer
   - mm0.awscli
-    - { role: mm0.php-xdebug,
-      php_extension_conf_paths: ['/etc/php5/cli/conf.d/'],
-      php_enable_webserver: false
-    }
+  - { role: mm0.php-xdebug,
+    php_extension_conf_paths: ['/etc/php5/cli/conf.d/'],
+    php_enable_webserver: false
+  }
   - mm0.php-code-sniffer

@@ -2,63 +2,43 @@
 
 namespace mm0\ImageManager\SSH;
 
-use mm0\ImageManager\ConnectionInterface;
+use mm0\ImageManager\AbstractConnection;
 use mm0\ImageManager\Exceptions\SSH2AuthenticationException;
 use mm0\ImageManager\Exceptions\ServerNotListeningException;
 use mm0\ImageManager\Exceptions\SSH2ConnectionException;
 use mm0\ImageManager\ConnectionResponse;
-use mm0\ImageManager\BaseClass;
+use mm0\ImageManager\Configuration\SSH;
+use mm0\ImageManager\Log;
 
 /**
  * Class Connection
  * @package mm0\ImageManager
  */
-class Connection extends BaseClass implements ConnectionInterface
+class Connection extends AbstractConnection
 {
-    use LoggingTraits;
 
     /**
-     * @var Configuration
+     * @var Resource
+     */
+    protected $connection;
+    /**
+     * @var SSH
      */
     protected $config;
     /**
      * @var bool
      */
     protected $authenticated = false;
-    /**
-     * @var resource
-     */
-    protected $connection;
 
-    /**
-     * @var bool
-     */
-    protected $sudo_all = false;
 
     protected $sftp_link = null;
 
-    protected $array_of_bad_words = array();
-    /**
-     * @return boolean
-     */
-    public function isSudoAll()
-    {
-        return $this->sudo_all;
-    }
 
-    /**
-     * @param boolean $sudo_all
-     */
-    public function setSudoAll($sudo_all)
-    {
-        $this->sudo_all = $sudo_all;
-    }
-
-    function __construct(Configuration $config)
+    function __construct(SSH $config)
     {
         $this->config = $config;
         $this->verify();
-        $this->array_of_bad_words[] = $this->config->passphrase();
+        Log::addWordFilter($this->config->passphrase());
     }
 
     /**
@@ -73,7 +53,7 @@ class Connection extends BaseClass implements ConnectionInterface
     /**
      * @return resource
      */
-    public function getConnection($force_reconnect = false)
+    public function getConnectionResource($force_reconnect = false)
     {
         if ($this->authenticated && !$force_reconnect) {
             return $this->connection;
@@ -103,7 +83,7 @@ class Connection extends BaseClass implements ConnectionInterface
     {
         $command = ($this->isSudoAll() && !$no_sudo ? "sudo " : "") . $command;
         $stream = ssh2_exec(
-            $this->getConnection(),
+            $this->getConnectionResource(),
             $command,
             true
         );
@@ -128,8 +108,8 @@ class Connection extends BaseClass implements ConnectionInterface
     public function getFileContents($file)
     {
         $temp_file = tempnam($this->getTemporaryDirectoryPath(), "");
-        $this->logInfo("Temp filename generated: " . $temp_file);
-        if (@ssh2_scp_recv($this->getConnection(), $file, $temp_file)) {
+        Log::logInfo("Temp filename generated: " . $temp_file);
+        if (@ssh2_scp_recv($this->getConnectionResource(), $file, $temp_file)) {
             $contents = file_get_contents($temp_file);
         } else {
             $contents = "";
@@ -155,10 +135,10 @@ class Connection extends BaseClass implements ConnectionInterface
      */
     public function writeFileContents($file, $contents, $mode = 0644)
     {
-        $this->logInfo("Writing file: " . $file);
+        Log::logInfo("Writing file: " . $file);
         $temp_file = tempnam($this->getTemporaryDirectoryPath(), "");
         file_put_contents($temp_file, $contents);
-        $result = ssh2_scp_send($this->getConnection(), $temp_file, $file, $mode);
+        $result = ssh2_scp_send($this->getConnectionResource(), $temp_file, $file, $mode);
         unlink($temp_file);
         return boolval($result);
     }
@@ -172,7 +152,7 @@ class Connection extends BaseClass implements ConnectionInterface
     {
 
         $resource = @ssh2_auth_pubkey_file(
-            $this->getConnection(),
+            $this->getConnectionResource(),
             $this->config->user(),
             $this->config->publicKey(),
             $this->config->privateKey(),
@@ -254,7 +234,15 @@ class Connection extends BaseClass implements ConnectionInterface
         clearstatcache();
         return ssh2_sftp_mkdir($this->sftp_link, $directory);
     }
-
+    /**
+     * @param string $directory
+     * @return mixed
+     */
+    public function rmfile($file)
+    {
+        clearstatcache();
+        return $this->delete($file,false,'f');
+    }
     /**
      * @param string $directory
      * @return mixed
@@ -330,7 +318,7 @@ class Connection extends BaseClass implements ConnectionInterface
             $path = '/./';
         }
         if($this->sftp_link == null)
-            $this->sftp_link= ssh2_sftp($this->getConnection());
+            $this->sftp_link= ssh2_sftp($this->getConnectionResource());
 
         return 'ssh2.sftp://' . $this->sftp_link . '/' . ltrim( $path, '/' );
     }
@@ -342,9 +330,5 @@ class Connection extends BaseClass implements ConnectionInterface
         clearstatcache();
         return is_dir( $this->sftp_path( $path ) );
     }
-    public function recursivelyChownDirectory($directory, $owner, $group, $mode)
-    {
-        $this->executeCommand("chown -R $owner:$group $directory");
-        $this->executeCommand("chmod -R $mode $directory");
-    }
+
 }

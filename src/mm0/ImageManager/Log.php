@@ -62,6 +62,9 @@ class Log
     {
         self::$log_level = $log_level;
     }
+    public static function addWordFilter($word){
+        static::$array_of_bad_words[] = $word;
+    }
 
     /**
      * @param $message
@@ -77,71 +80,71 @@ class Log
     /**
      * @param $message
      */
-    public static function logInfo($message)
+    public static function logInfo($message,$data=array())
     {
-        self::log($message, "INFO");
+        self::log($message, "INFO",$data=array());
     }
 
     /**
      * @param $message
      */
-    public static function logDebug($message)
+    public static function logDebug($message,$data=array())
     {
-        self::log($message, "DEBUG");
+        self::log($message, "DEBUG",$data=array());
     }
 
     /**
      * @param $message
      */
-    public static function logError($message)
+    public static function logError($message,$data=array())
     {
-        self::log($message, "ERROR");
-    }
-
-    /**
-     * @param $message
-     * @param string $severity
-     */
-    public static function logWarning($message)
-    {
-        self::log($message, "WARNING");
-
+        self::log($message, "ERROR",$data=array());
     }
 
     /**
      * @param $message
      * @param string $severity
      */
-    public static function logNotice($message)
+    public static function logWarning($message,$data=array())
     {
-        self::log($message, "NOTICE");
+        self::log($message, "WARNING",$data=array());
+
+    }
+
+    /**
+     * @param $message
+     * @param string $severity
+     */
+    public static function logNotice($message,$data=array())
+    {
+        self::log($message, "NOTICE",$data=array());
 
     }
     /**
      * @param $message
      * @param string $severity
      */
-    public static function logCritical($message)
+    public static function logCritical($message,$data=array())
     {
-        self::log($message, "CRITICAL");
+        self::log($message, "CRITICAL",$data=array());
 
     }
     /**
      * @param $message
      * @param string $severity
      */
-    public static function logAlert($message)
+    public static function logAlert($message,$data=array())
     {
-        self::log($message, "ALERT");
+        self::log($message, "ALERT",$data=array());
 
     }
     /**
      * @param $message
      * @param string $severity
      */
-    public static function logEmergency($message)
+    public static function logEmergency($message,$data=array())
     {
-        self::log($message, "EMERGENCY");
+        self::log($message, "EMERGENCY",$data);
 
     }
     /**
@@ -175,12 +178,12 @@ class Log
      * @param $message
      * @param string $severity
      */
-    public function log($message, $severity = "INFO")
+    public function log($message, $severity = "INFO", $data = null)
     {
         if (strlen($message)) {
             $function = "add".ucfirst($severity);
             foreach(self::getLogger() as $logger){
-                $logger->$function(self::sanitize($message));
+                $logger->$function(self::sanitize($message),$data);
             }
         }
     }

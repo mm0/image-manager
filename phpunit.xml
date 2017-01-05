@@ -32,6 +32,18 @@
         <testsuite name="FullTestSuites">
             <directory suffix=".php">./tests/FullTestSuites</directory>
         </testsuite>
+        <testsuite name="Actions">
+            <directory suffix=".php">./tests/Actions</directory>
+        </testsuite>
+        <testsuite name="Destinations">
+            <directory suffix=".php">./tests/Destinations</directory>
+        </testsuite>
+        <testsuite name="Iterators">
+            <directory suffix=".php">./tests/Iterators</directory>
+        </testsuite>
+        <testsuite name="Manager">
+            <directory suffix=".php">./tests/Manager</directory>
+        </testsuite>
     </testsuites>
 </phpunit>
 

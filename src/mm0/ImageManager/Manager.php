@@ -144,7 +144,6 @@ class Manager extends BaseClass
                 $iteratorType = $destination->returnIterator();
                 $this->getConnection()->setIteratorType($iteratorType);
                 $iterator = $this->getConnection()->getIterator($destination->getPath());
-//                Log::logInfo($iterator);
                 // LimitIterator Wrapper
                 if ($limit > 0) {
                     $iterator = new \LimitIterator($iterator, 0, $limit);
@@ -161,8 +160,6 @@ class Manager extends BaseClass
     private function iteratorCallback(\Iterator $iterator)
     {
         $item = $iterator->current();
-//        Log::logInfo($item);
-
         $pathname = $item->getPathname();
         $filename = $item->getFilename();
         if (in_array($filename, array(".", ".."))) return true;
@@ -179,7 +176,7 @@ class Manager extends BaseClass
     {
         Log::logInfo("Processing Post Actions for: " . $pathname);
         foreach ($this->getPostActions() as $action) {
-            $action::resourceAction($this->getConnection(),$pathname);
+            $action::resourceAction($this->getConnection(), $pathname);
         }
     }
 
@@ -250,7 +247,6 @@ class Manager extends BaseClass
     private function processFile($pathname)
     {
         Log::logInfo("processing file: $pathname");
-        //TODO: upload file
         $key = pathinfo($pathname);
         $key = $key['basename'];
         $this->getSaveInterface()->setKey($key);

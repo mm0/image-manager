@@ -45,7 +45,7 @@ class SSHConnectionTest extends \AbstractConnectionTest
      */
     public function setUp()
     {
-        $this->ssh_configuration = new \mm0\ImageManager\SSH\Configuration(
+        $this->ssh_configuration = new \mm0\ImageManager\Configuration\SSH(
             $this->host,
             $this->port,
             $this->user,
@@ -95,6 +95,6 @@ class SSHConnectionTest extends \AbstractConnectionTest
         $reflection_property->setValue($a, false);
         $a->
         $this->setExpectedException(\mm0\ImageManager\Exceptions\SSH2ConnectionException::class);
-        $a->getConnection();
+        $a->getConnectionResource();
     }
 }

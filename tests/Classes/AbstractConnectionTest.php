@@ -80,12 +80,25 @@ abstract class AbstractConnectionTest extends PHPUnit_Framework_TestCase
         $this->connection->rmdir($directory);
         $this->assertFalse($this->connection->file_exists($directory));
     }
-//
-//    public function testGetConnection(){
-//        $this->createConnection();
-//        $this->assertEquals($this->connection,$this->connection->getConnection());
-//    }
 
+    public function testGetConnection(){
+        $this->createConnection();
+        $this->assertInstanceOf(\mm0\ImageManager\ConnectionInterface::class,$this->connection->getConnection());
+
+    }
+
+    public function testRemoveFile(){
+        $this->createConnection();
+        $contents = "temp_file";
+        $tmp_file = $this->connection->getTemporaryDirectoryPath() . $contents;
+        $result = $this->connection->writeFileContents($tmp_file, $contents);
+        $this->assertTrue($result);
+        $this->assertTrue($this->connection->file_exists($tmp_file));
+        $this->connection->rmfile($tmp_file);
+        $this->assertFalse($this->connection->file_exists($tmp_file));
+
+
+    }
     public function testFileNotExistsFileContents(){
         $this->createConnection();
         $this->assertEmpty($this->connection->getFileContents("/tmp/fakefilerandomtest"));

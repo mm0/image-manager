@@ -61,7 +61,7 @@ abstract class AbstractFullTestSuite extends PHPUnit_Framework_TestCase
     protected $ssh_options;
     protected $hostkey = "ssh-rsa";
 
-    protected $bucket = "innobackup-testing-bucket";
+    protected $bucket = "image-manager-test-bucket";
     protected $region = "us-west-1";
     protected $concurrency = 16;
 
